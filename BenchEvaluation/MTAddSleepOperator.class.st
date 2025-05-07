@@ -4,9 +4,9 @@ Class {
 	#instVars : [
 		'milliseconds'
 	],
-	#category : 'BenchEvaluation-Experimentation',
+	#category : 'BenchEvaluation-PerformanceMutants',
 	#package : 'BenchEvaluation',
-	#tag : 'Experimentation'
+	#tag : 'PerformanceMutants'
 }
 
 { #category : 'accessing' }

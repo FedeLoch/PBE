@@ -1,38 +1,21 @@
 Class {
 	#name : 'PBTExperimentConfig',
-	#superclass : 'Object',
+	#superclass : 'BenchConfig',
 	#instVars : [
 		'schema',
-		'title',
-		'tests',
 		'target',
 		'time',
-		'pbtResult',
 		'cases'
 	],
-	#category : 'BenchEvaluation-Experimentation',
+	#category : 'BenchEvaluation-Analysis',
 	#package : 'BenchEvaluation',
-	#tag : 'Experimentation'
+	#tag : 'Analysis'
 }
 
 { #category : 'accessing' }
 PBTExperimentConfig >> cases: amount [ 
 	
 	cases := amount
-]
-
-{ #category : 'accessing' }
-PBTExperimentConfig >> generateTests [
-
-	pbtResult := self run.
-	tests := {  pbtResult mutalkTest }.
-	
-]
-
-{ #category : 'accessing' }
-PBTExperimentConfig >> result [
-
-	^ pbtResult
 ]
 
 { #category : 'accessing' }
@@ -65,25 +48,7 @@ PBTExperimentConfig >> target: aTarget [
 ]
 
 { #category : 'accessing' }
-PBTExperimentConfig >> tests [
-	
-	^ tests
-]
-
-{ #category : 'accessing' }
 PBTExperimentConfig >> time: aTime [
 
 	time := aTime 
-]
-
-{ #category : 'accessing' }
-PBTExperimentConfig >> title [
-
-	^ title
-]
-
-{ #category : 'accessing' }
-PBTExperimentConfig >> title: aTitle [ 
-	
-	title := aTitle
 ]

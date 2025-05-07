@@ -1,9 +1,9 @@
 Class {
 	#name : 'PBTPerformanceOperations',
 	#superclass : 'Object',
-	#category : 'BenchEvaluation-Experimentation',
+	#category : 'BenchEvaluation-PerformanceMutants',
 	#package : 'BenchEvaluation',
-	#tag : 'Experimentation'
+	#tag : 'PerformanceMutants'
 }
 
 { #category : 'accessing' }

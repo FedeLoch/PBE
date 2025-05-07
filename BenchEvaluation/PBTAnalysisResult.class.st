@@ -8,9 +8,9 @@ Class {
 		'mutants',
 		'title'
 	],
-	#category : 'BenchEvaluation-Experimentation',
+	#category : 'BenchEvaluation-Analysis',
 	#package : 'BenchEvaluation',
-	#tag : 'Experimentation'
+	#tag : 'Analysis'
 }
 
 { #category : 'adding' }

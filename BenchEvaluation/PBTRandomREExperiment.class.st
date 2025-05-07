@@ -197,7 +197,6 @@ PBTRandomREExperiment >> schemaWith: regexConstraint [
 	assert := [ :regex :input :result | (regex matches: input) = result ].
 	score := [ :re :inputs :res |
 	         | coreScore gnoccoScore anotherRegex base |
-	1halt.
 	         coreScore := res time asMilliSeconds.
 	         anotherRegex := inputs first asRegex.
 	

@@ -1,5 +1,5 @@
 Class {
-	#name : 'PBTAnalysisResult',
+	#name : 'BenchAnalysisResult',
 	#superclass : 'Object',
 	#instVars : [
 		'comparisons',
@@ -14,7 +14,7 @@ Class {
 }
 
 { #category : 'adding' }
-PBTAnalysisResult >> add: result called: label forMutant: mutant [
+BenchAnalysisResult >> add: result called: label forMutant: mutant [
 
 	comparisons at: label ifAbsentPut: Dictionary new.
 	mutants at: mutant operator title update: [ :val | val + 1 ] initial: 0.
@@ -25,7 +25,7 @@ PBTAnalysisResult >> add: result called: label forMutant: mutant [
 ]
 
 { #category : 'as yet unclassified' }
-PBTAnalysisResult >> baseline: aBaseline [
+BenchAnalysisResult >> baseline: aBaseline [
 
 	| times |
 	
@@ -34,13 +34,13 @@ PBTAnalysisResult >> baseline: aBaseline [
 ]
 
 { #category : 'adding' }
-PBTAnalysisResult >> incremental: result [
+BenchAnalysisResult >> incremental: result [
 
 	^ (result times average >= self threshold) ifTrue: [ 1 ] ifFalse: [ 0 ]
 ]
 
 { #category : 'adding' }
-PBTAnalysisResult >> initialize [ 
+BenchAnalysisResult >> initialize [ 
 
 	super initialize.
 	comparisons := Dictionary new.
@@ -49,7 +49,7 @@ PBTAnalysisResult >> initialize [
 ]
 
 { #category : 'private - inspector accessing' }
-PBTAnalysisResult >> plot [
+BenchAnalysisResult >> plot [
 	| plt legend |
 	plt := RSCompositeChart new.
 	
@@ -84,7 +84,7 @@ PBTAnalysisResult >> plot [
 ]
 
 { #category : 'adding' }
-PBTAnalysisResult >> threshold [
+BenchAnalysisResult >> threshold [
 
 	threshold ifNotNil: [ ^ threshold ].
 
@@ -92,13 +92,13 @@ PBTAnalysisResult >> threshold [
 ]
 
 { #category : 'as yet unclassified' }
-PBTAnalysisResult >> threshold: aThreshold [
+BenchAnalysisResult >> threshold: aThreshold [
 
 	threshold := aThreshold.
 ]
 
 { #category : 'adding' }
-PBTAnalysisResult >> title: aTitle [
+BenchAnalysisResult >> title: aTitle [
 
 	title := aTitle 
 ]

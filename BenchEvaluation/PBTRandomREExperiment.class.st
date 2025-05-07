@@ -4,9 +4,9 @@ Class {
 	#instVars : [
 		'time'
 	],
-	#category : 'BenchEvaluation-Experimentation',
+	#category : 'BenchEvaluation-Analysis',
 	#package : 'BenchEvaluation',
-	#tag : 'Experimentation'
+	#tag : 'Analysis'
 }
 
 { #category : 'as yet unclassified' }

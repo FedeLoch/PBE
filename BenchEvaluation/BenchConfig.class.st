@@ -15,7 +15,7 @@ Class {
 BenchConfig >> generateTests [
 
 	result := self run.
-	tests := {  result mutalkTest }.
+	tests := { result mutalkTest }.
 ]
 
 { #category : 'accessing' }

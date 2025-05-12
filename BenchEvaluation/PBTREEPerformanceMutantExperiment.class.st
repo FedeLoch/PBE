@@ -50,14 +50,6 @@ PBTREEPerformanceMutantExperiment >> criteriaLabel [
 ]
 
 { #category : 'as yet unclassified' }
-PBTREEPerformanceMutantExperiment >> initialize [ 
-
-	mutants := self mutants.
-"	threshold := 20 percent."
-	
-]
-
-{ #category : 'as yet unclassified' }
 PBTREEPerformanceMutantExperiment >> methodsToMutate [
 
 	^ self target sendReachableMethods

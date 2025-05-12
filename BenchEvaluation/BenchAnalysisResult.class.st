@@ -3,8 +3,7 @@ Class {
 	#superclass : 'Object',
 	#instVars : [
 		'comparisons',
-		'baseline',
-		'threshold',
+		'fixedThreshold',
 		'mutants',
 		'title'
 	],
@@ -14,29 +13,22 @@ Class {
 }
 
 { #category : 'adding' }
-BenchAnalysisResult >> add: result called: label forMutant: mutant [
+BenchAnalysisResult >> add: benchResult called: resultName forMutant: mutant withBaseline: benchBaseline [
 
-	comparisons at: label ifAbsentPut: Dictionary new.
+	comparisons at: resultName ifAbsentPut: Dictionary new.
+	
 	mutants at: mutant operator title update: [ :val | val + 1 ] initial: 0.
-	(comparisons at: label)
+	
+	(comparisons at: resultName)
 		at: mutant operator title
-		update: [ :val | val + (self incremental: result) ]
+		update: [ :val | val + ((self detected: benchResult fromBase: benchBaseline) ifTrue: [ 1 ] ifFalse: [ 0 ]) ]
 		initial: 0
 ]
 
-{ #category : 'as yet unclassified' }
-BenchAnalysisResult >> baseline: aBaseline [
-
-	| times |
-	
-	baseline := aBaseline.
-	times := aBaseline tests collect: [ :e | e result time asMilliSeconds ].
-]
-
 { #category : 'adding' }
-BenchAnalysisResult >> incremental: result [
+BenchAnalysisResult >> detected: benchResult fromBase: benchBaseline [
 
-	^ (result times average >= self threshold) ifTrue: [ 1 ] ifFalse: [ 0 ]
+	^ benchResult time >= (self thresholdOf: benchResult)
 ]
 
 { #category : 'adding' }
@@ -49,52 +41,41 @@ BenchAnalysisResult >> initialize [
 ]
 
 { #category : 'private - inspector accessing' }
-BenchAnalysisResult >> plot [
-	| plt legend |
-	plt := RSCompositeChart new.
-	
-	plt extent: 400@400.
-	legend := RSLegend new.
-	legend container: plt canvas.
-	legend layout horizontal gapSize: 30.
-	
-	comparisons keysDo: [ :strategy | | p x y color |
-		x := OrderedCollection new.
-		y := OrderedCollection new.
+BenchAnalysisResult >> plotBenchmarksEffectiveness [
 
-		((comparisons at: strategy) keys sort: [ :m1 :m2 | (m1 splitOn: ' ') last asInteger < (m2 splitOn: ' ') last asInteger ]) do: [ :mutant |
-			x add: (mutant splitOn: ' ') last asInteger.
-			y add: (comparisons at: strategy at: mutant) / (mutants at: mutant)
+	| heatMap values |
+	
+	heatMap := RSHeatmap new.
+	heatMap shape extent: 40@20.
+	values := comparisons keys inject: OrderedCollection new into: [ :matrix :strategy | | localValues |
+
+		localValues := (self sortedMutantsAt: strategy) collect: [ :mutant |
+			(comparisons at: strategy at: mutant) / (mutants at: mutant)
 		].
 		
-		color := Color random.
-		p := RSLinePlot new x: x y: y; color: color.
-		legend text: strategy withBoxColor: color.
-		plt add: p
+		matrix add: localValues.
+		matrix
 	].
 	
-	plt xlabel: 'mutation time'.
-	plt ylabel: 'rate of detected mutants'.
-	plt title: title.
+	heatMap objectsX: (self sortedMutantsAt: comparisons keys first).
+	heatMap objectsY: comparisons keys.
+   heatMap dataMatrix: values.
 	
-	plt build.
-	legend build.
+	^ heatMap open
+]
 
-	^ plt yLog; canvas
+{ #category : 'private - inspector accessing' }
+BenchAnalysisResult >> sortedMutantsAt: aStrategy [
+
+	^ (comparisons at: aStrategy) keys sort: [ :m1 :m2 | (m1 splitOn: ' ') last asInteger < (m2 splitOn: ' ') last asInteger ]
 ]
 
 { #category : 'adding' }
-BenchAnalysisResult >> threshold [
+BenchAnalysisResult >> thresholdOf: benchBaseLine [
 
-	threshold ifNotNil: [ ^ threshold ].
+	fixedThreshold ifNotNil: [ ^ fixedThreshold ].
 
-	^ baseline bloxplotByTime median + baseline times stdev
-]
-
-{ #category : 'as yet unclassified' }
-BenchAnalysisResult >> threshold: aThreshold [
-
-	threshold := aThreshold.
+	^ benchBaseLine median + benchBaseLine stdev
 ]
 
 { #category : 'adding' }

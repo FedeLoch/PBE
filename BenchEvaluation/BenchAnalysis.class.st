@@ -20,12 +20,14 @@ BenchAnalysis >> analyze [
 			3.1 - Per each config c_j, we generate N inputs ( MM )
 			3.2 - We compare each MM_k with respect to the boxplot and we select the outliers number for m_i
 			3.3 - We save the amount of outliers who identified the effect of m_i"
-			
-	^ mutants inject: (BenchAnalysisResult new title: 'Result running ', self criteriaLabel, ' each configuration ') into: [ :r :mutant |
+
+	self setUpBenchmarks.
+
+	^ mutants inject: (BenchAnalysisResult new title: 'Result running ', self criteriaLabel, ' each configuration ') into: [ :result :mutant |
 		mutant install.
-		benchmarkConfigs do: [ :config | r add: config run called: config title forMutant: mutant withBaseline: config result ].
+		benchmarkConfigs do: [ :config | result add: config run called: config title forMutant: mutant withBaseline: config result ].
 		mutant uninstall.
-		r.
+		result.
 	]
 ]
 
@@ -52,8 +54,6 @@ BenchAnalysis >> initialize [
 
 	super initialize.
 	mutants := self mutants.
-	benchmarkConfigs := self benchmarkConfigs.
-	benchmarkConfigs do: #generateTests
 ]
 
 { #category : 'initialization' }
@@ -66,4 +66,11 @@ BenchAnalysis >> methodsToMutate [
 BenchAnalysis >> mutants [
 
 	^ (MTManualMutatedMethodGenerationStrategy new targetMethods: self methodsToMutate) mutationsFor: PBTPerformanceOperations
+]
+
+{ #category : 'initialization' }
+BenchAnalysis >> setUpBenchmarks [
+
+	benchmarkConfigs := self benchmarkConfigs.
+	benchmarkConfigs do: [ :config | config generateTests ]
 ]

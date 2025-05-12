@@ -10,6 +10,18 @@ Class {
 }
 
 { #category : 'as yet unclassified' }
+PBTRandomREExperiment >> benchmarkConfigs [
+
+	^ {
+"		  self mctsConfig."
+		  self hillClimbingConfig.
+		  self hillClimbingAndOptConfig.
+		  "self sdGenConfig."
+		  self gramatronConfig.
+	}
+]
+
+{ #category : 'as yet unclassified' }
 PBTRandomREExperiment >> classesToMutate [
 
 	^ { RxMatcher ". RxParser" }

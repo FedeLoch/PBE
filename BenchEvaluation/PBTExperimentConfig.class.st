@@ -21,11 +21,11 @@ PBTExperimentConfig >> cases: amount [
 { #category : 'accessing' }
 PBTExperimentConfig >> run [
 
-	^ time ifNil: [
+	^ PBTBenchResult from: (time ifNil: [
 		PBTRunner testWithLowCost: target from: schema times: cases
 	] ifNotNil: [
 		PBTRunner testWithLowCost: target from: schema for: time
-	]
+	])
 ]
 
 { #category : 'accessing' }

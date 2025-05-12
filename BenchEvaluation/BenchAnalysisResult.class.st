@@ -46,11 +46,11 @@ BenchAnalysisResult >> plotBenchmarksEffectiveness [
 	| heatMap values |
 	
 	heatMap := RSHeatmap new.
-	heatMap shape extent: 40@20.
+	heatMap colorPalette: (NSScale linear range: {Color white . Color red}).
+	heatMap shape extent: 60@40.
 	values := comparisons keys inject: OrderedCollection new into: [ :matrix :strategy | | localValues |
-
 		localValues := (self sortedMutantsAt: strategy) collect: [ :mutant |
-			(comparisons at: strategy at: mutant) / (mutants at: mutant)
+			Fraction numerator: (comparisons at: strategy at: mutant) denominator: (mutants at: mutant)
 		].
 		
 		matrix add: localValues.

@@ -13,12 +13,11 @@ Class {
 PBTRandomREExperiment >> benchmarkConfigs [
 
 	^ {
-"		  self mctsConfig."
+		  self mctsConfig.
 		  self hillClimbingConfig.
 		  self hillClimbingAndOptConfig.
-		  "self sdGenConfig."
-		  self gramatronConfig.
-	}
+		  self sdGenConfig.
+		  self gramatronConfig }
 ]
 
 { #category : 'as yet unclassified' }

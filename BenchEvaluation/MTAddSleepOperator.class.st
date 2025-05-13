@@ -24,7 +24,7 @@ MTAddSleepOperator >> appliesToNode: aNode [
 { #category : 'printing' }
 MTAddSleepOperator >> description [
 
-	^ 'Sleep of ', self milliseconds asString
+	^ self milliseconds asString, ' ms'
 ]
 
 { #category : 'as yet unclassified' }

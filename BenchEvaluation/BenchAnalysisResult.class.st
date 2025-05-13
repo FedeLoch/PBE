@@ -67,7 +67,7 @@ BenchAnalysisResult >> plotBenchmarksEffectiveness [
 { #category : 'private - inspector accessing' }
 BenchAnalysisResult >> sortedMutantsAt: aStrategy [
 
-	^ (comparisons at: aStrategy) keys sort: [ :m1 :m2 | (m1 splitOn: ' ') last asInteger < (m2 splitOn: ' ') last asInteger ]
+	^ (comparisons at: aStrategy) keys sort: [ :m1 :m2 | (m1 splitOn: ' ') first asInteger < (m2 splitOn: ' ') first asInteger ]
 ]
 
 { #category : 'adding' }

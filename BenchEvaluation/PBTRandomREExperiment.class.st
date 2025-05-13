@@ -175,7 +175,7 @@ PBTRandomREExperiment >> regexByProp: props and: feedback [
 		maybe asRegex.
 		regex := maybe ]
 			on: Error
-			do: [  ] ].
+			do: [ :e | "1 halt." ] ].
 
 	^ regex
 ]

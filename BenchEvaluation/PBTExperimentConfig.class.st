@@ -5,7 +5,8 @@ Class {
 		'schema',
 		'target',
 		'time',
-		'cases'
+		'cases',
+		'tests'
 	],
 	#category : 'BenchEvaluation-Analysis',
 	#package : 'BenchEvaluation',
@@ -16,6 +17,13 @@ Class {
 PBTExperimentConfig >> cases: amount [ 
 	
 	cases := amount
+]
+
+{ #category : 'as yet unclassified' }
+PBTExperimentConfig >> generateTests [
+
+	super generateTests.
+	tests := { result mutalkTest }.
 ]
 
 { #category : 'accessing' }
@@ -45,6 +53,12 @@ PBTExperimentConfig >> schema: anSchema [
 PBTExperimentConfig >> target: aTarget [
 
 	target := aTarget 
+]
+
+{ #category : 'accessing' }
+PBTExperimentConfig >> tests [
+	
+	^ tests
 ]
 
 { #category : 'accessing' }

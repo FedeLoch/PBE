@@ -3,8 +3,7 @@ Class {
 	#superclass : 'Object',
 	#instVars : [
 		'title',
-		'result',
-		'tests'
+		'result'
 	],
 	#category : 'BenchEvaluation-Analysis',
 	#package : 'BenchEvaluation',
@@ -15,7 +14,6 @@ Class {
 BenchConfig >> generateTests [
 
 	result := self run.
-	tests := { result mutalkTest }.
 ]
 
 { #category : 'accessing' }
@@ -34,12 +32,6 @@ BenchConfig >> run [
 BenchConfig >> runAndSave [
 
 	^ self generateTests
-]
-
-{ #category : 'accessing' }
-BenchConfig >> tests [
-	
-	^ tests
 ]
 
 { #category : 'accessing' }

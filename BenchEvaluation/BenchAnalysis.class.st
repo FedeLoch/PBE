@@ -10,6 +10,23 @@ Class {
 	#tag : 'Analysis'
 }
 
+{ #category : 'running' }
+BenchAnalysis class >> run [
+
+	^ self new analyze
+]
+
+{ #category : 'as yet unclassified' }
+BenchAnalysis >> allMethodsOfPackage: package inTag: atag [
+
+	^ (RPackageOrganizer default packageNamed: package) definedClasses inject: OrderedCollection new into: [ :acc :className |
+		(className packageTag name = atag) ifTrue: [
+			acc addAll: className methods
+		].
+	acc
+]
+]
+
 { #category : 'private' }
 BenchAnalysis >> analyze [
 

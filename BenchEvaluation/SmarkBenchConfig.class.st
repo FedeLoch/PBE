@@ -28,6 +28,12 @@ SmarkBenchConfig >> run [
 	^ SmarkBenchResult from: (benchmark run: times)
 ]
 
+{ #category : 'as yet unclassified' }
+SmarkBenchConfig >> runWithCriteria: aBlock [
+
+	^ self run
+]
+
 { #category : 'accessing' }
 SmarkBenchConfig >> times: count [
 

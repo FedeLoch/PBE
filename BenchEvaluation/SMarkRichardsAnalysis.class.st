@@ -9,7 +9,7 @@ Class {
 { #category : 'initialization' }
 SMarkRichardsAnalysis >> benchmarkConfigs [
 
-	^ { SmarkBenchConfig for: SMarkRichards times: 5 }
+	^ { SmarkBenchConfig for: SMarkRichards times: 1 }
 ]
 
 { #category : 'private' }

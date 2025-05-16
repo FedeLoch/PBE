@@ -9,7 +9,7 @@ Class {
 { #category : 'initialization' }
 SMarkDeltaBlueAnalysis >> benchmarkConfigs [
 
-	^ { SmarkBenchConfig for: SMarkDeltaBlue times: 10 }
+	^ { SmarkBenchConfig for: SMarkDeltaBlue times: 1 }
 ]
 
 { #category : 'private' }

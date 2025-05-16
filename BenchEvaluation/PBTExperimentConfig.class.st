@@ -23,7 +23,7 @@ PBTExperimentConfig >> cases: amount [
 PBTExperimentConfig >> generateTests [
 
 	super generateTests.
-	tests := { result mutalkTest }.
+	tests := { baseline mutalkTest }.
 ]
 
 { #category : 'accessing' }
@@ -34,6 +34,12 @@ PBTExperimentConfig >> run [
 	] ifNotNil: [
 		PBTRunner testWithLowCost: target from: schema for: time
 	])
+]
+
+{ #category : 'as yet unclassified' }
+PBTExperimentConfig >> runWithCriteria: aBlock [
+	1 halt.
+	
 ]
 
 { #category : 'accessing' }

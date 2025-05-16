@@ -3,23 +3,23 @@ Class {
 	#superclass : 'Object',
 	#instVars : [
 		'title',
-		'result'
+		'baseline'
 	],
 	#category : 'BenchEvaluation-Analysis',
 	#package : 'BenchEvaluation',
 	#tag : 'Analysis'
 }
 
+{ #category : 'accessing' }
+BenchConfig >> baseline [
+
+	^ baseline 
+]
+
 { #category : 'as yet unclassified' }
 BenchConfig >> generateTests [
 
-	result := self run.
-]
-
-{ #category : 'accessing' }
-BenchConfig >> result [
-
-	^ result
+	baseline := self run.
 ]
 
 { #category : 'running' }
@@ -32,6 +32,18 @@ BenchConfig >> run [
 BenchConfig >> runAndSave [
 
 	^ self generateTests
+]
+
+{ #category : 'as yet unclassified' }
+BenchConfig >> runAndSaveBaseline [
+
+	^ self generateTests
+]
+
+{ #category : 'as yet unclassified' }
+BenchConfig >> runWithCriteria: aBlock [
+
+	self subclassResponsibility 
 ]
 
 { #category : 'accessing' }

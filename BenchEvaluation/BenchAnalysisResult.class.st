@@ -5,7 +5,9 @@ Class {
 		'comparisons',
 		'fixedThreshold',
 		'mutants',
-		'title'
+		'title',
+		'initialTime',
+		'elapsedTime'
 	],
 	#category : 'BenchEvaluation-Analysis',
 	#package : 'BenchEvaluation',
@@ -13,22 +15,31 @@ Class {
 }
 
 { #category : 'adding' }
-BenchAnalysisResult >> add: benchResult called: resultName forMutant: mutant withBaseline: benchBaseline [
+BenchAnalysisResult >> detect: benchResult from: config forMutant: mutant [
 
-	comparisons at: resultName ifAbsentPut: Dictionary new.
+	comparisons at: config title ifAbsentPut: Dictionary new.
 	
 	mutants at: mutant operator title update: [ :val | val + 1 ] initial: 0.
 	
-	(comparisons at: resultName)
+	(comparisons at: config title)
 		at: mutant operator title
-		update: [ :val | val + ((self detected: benchResult fromBase: benchBaseline) ifTrue: [ 1 ] ifFalse: [ 0 ]) ]
+		update: [ :val | val + ((self detected: benchResult from: config) ifTrue: [ 1 ] ifFalse: [ 0 ]) ]
 		initial: 0
 ]
 
 { #category : 'adding' }
-BenchAnalysisResult >> detected: benchResult fromBase: benchBaseline [
+BenchAnalysisResult >> detected: benchResult from: config [
 
-	^ benchResult time >= (self thresholdOf: benchResult)
+	| threshold |
+	threshold := self thresholdOf: config.
+	
+	^ benchResult tests anySatisfy: [ :test | test time >= threshold ]
+]
+
+{ #category : 'accessing' }
+BenchAnalysisResult >> end [
+
+	elapsedTime := Duration milliSeconds: (Smalltalk highResClock) - initialTime. 
 ]
 
 { #category : 'adding' }
@@ -68,6 +79,12 @@ BenchAnalysisResult >> plotBenchmarksEffectiveness [
 BenchAnalysisResult >> sortedMutantsAt: aStrategy [
 
 	^ (comparisons at: aStrategy) keys sort: [ :m1 :m2 | (m1 splitOn: ' ') first asInteger < (m2 splitOn: ' ') first asInteger ]
+]
+
+{ #category : 'accessing' }
+BenchAnalysisResult >> start [
+
+	initialTime := Smalltalk highResClock.
 ]
 
 { #category : 'adding' }

@@ -3,8 +3,7 @@ Class {
 	#superclass : 'BenchAnalysis',
 	#instVars : [
 		'pbtTests',
-		'pbtConfigurations',
-		'countOfCases'
+		'pbtConfigurations'
 	],
 	#category : 'BenchEvaluation-Analysis',
 	#package : 'BenchEvaluation',

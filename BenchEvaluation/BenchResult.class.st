@@ -40,6 +40,12 @@ BenchResult >> stdev [
 ]
 
 { #category : 'accessing' }
+BenchResult >> tests [
+
+	self subclassResponsibility 
+]
+
+{ #category : 'accessing' }
 BenchResult >> time [
 
 	^ self subclassResponsibility 

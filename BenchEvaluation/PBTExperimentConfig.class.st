@@ -38,8 +38,8 @@ PBTExperimentConfig >> run [
 
 { #category : 'as yet unclassified' }
 PBTExperimentConfig >> runWithCriteria: aBlock [
-	1 halt.
-	
+
+	^ PBTBenchResult from: (PBTRunner testWithLowCost: target from: schema withCriteria: aBlock)
 ]
 
 { #category : 'accessing' }

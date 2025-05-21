@@ -7,7 +7,8 @@ Class {
 		'mutants',
 		'title',
 		'initialTime',
-		'elapsedTime'
+		'elapsedTime',
+		'baselines'
 	],
 	#category : 'BenchEvaluation-Analysis',
 	#package : 'BenchEvaluation',
@@ -33,7 +34,7 @@ BenchAnalysisResult >> detected: benchResult from: config [
 	| threshold |
 	threshold := self thresholdOf: config.
 	
-	^ benchResult tests anySatisfy: [ :test | test time >= threshold ]
+	^ benchResult tests anySatisfy: [ :test | self testSatisfy: test with: threshold ]
 ]
 
 { #category : 'accessing' }
@@ -47,8 +48,15 @@ BenchAnalysisResult >> initialize [
 
 	super initialize.
 	comparisons := Dictionary new.
+	baselines := Dictionary new.
 	mutants := Dictionary new.
 	
+]
+
+{ #category : 'private - inspector accessing' }
+BenchAnalysisResult >> plotBaselines [
+
+	1 halt.
 ]
 
 { #category : 'private - inspector accessing' }
@@ -57,8 +65,9 @@ BenchAnalysisResult >> plotBenchmarksEffectiveness [
 	| heatMap values |
 	
 	heatMap := RSHeatmap new.
-	heatMap colorPalette: (NSScale linear range: {Color white . Color red}).
+	heatMap colorPalette: (NSScale linear range: { Color white . Color red }).
 	heatMap shape extent: 60@40.
+	
 	values := comparisons keys inject: OrderedCollection new into: [ :matrix :strategy | | localValues |
 		localValues := (self sortedMutantsAt: strategy) collect: [ :mutant |
 			Fraction numerator: (comparisons at: strategy at: mutant) denominator: (mutants at: mutant)
@@ -78,7 +87,7 @@ BenchAnalysisResult >> plotBenchmarksEffectiveness [
 { #category : 'private - inspector accessing' }
 BenchAnalysisResult >> sortedMutantsAt: aStrategy [
 
-	^ (comparisons at: aStrategy) keys sort: [ :m1 :m2 | (m1 splitOn: ' ') first asInteger < (m2 splitOn: ' ') first asInteger ]
+	^ (comparisons at: aStrategy) keys sort: [ :m1 :m2 | (m1 splitOn: ' ') first asInteger > (m2 splitOn: ' ') first asInteger ]
 ]
 
 { #category : 'accessing' }
@@ -87,12 +96,31 @@ BenchAnalysisResult >> start [
 	initialTime := Smalltalk highResClock.
 ]
 
+{ #category : 'tests' }
+BenchAnalysisResult >> testSatisfy: aTest for: aConfig [
+
+	^ self testSatisfy: aTest with: (self thresholdOf: aConfig) 
+	
+]
+
+{ #category : 'tests' }
+BenchAnalysisResult >> testSatisfy: aTest with: threshold [
+
+	^ aTest time asMilliSeconds >= threshold
+	
+]
+
 { #category : 'adding' }
-BenchAnalysisResult >> thresholdOf: benchBaseLine [
+BenchAnalysisResult >> thresholdOf: config [
 
-	fixedThreshold ifNotNil: [ ^ fixedThreshold ].
+	| stdevs baseline |
+	stdevs := 1.
+	
+	baselines at: config title ifAbsentPut: config baseline.
+	
+	baseline := baselines at: config title.
 
-	^ benchBaseLine median + benchBaseLine stdev
+	^ baseline median + (stdevs * baseline stdev)
 ]
 
 { #category : 'adding' }

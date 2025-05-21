@@ -3,7 +3,9 @@ Class {
 	#superclass : 'Object',
 	#instVars : [
 		'benchmarkConfigs',
-		'mutants'
+		'mutants',
+		'time',
+		'maxCases'
 	],
 	#category : 'BenchEvaluation-Analysis',
 	#package : 'BenchEvaluation',
@@ -30,14 +32,21 @@ BenchAnalysis >> allMethodsOfPackage: package inTag: atag [
 { #category : 'private' }
 BenchAnalysis >> analyze [
 
+	| result |
 	self setUpBenchmarks.
+	
+	result := (BenchAnalysisResult new title: 'Result running ', self criteriaLabel, ' each configuration ') start.
 
-	^ mutants inject: (BenchAnalysisResult new title: 'Result running ', self criteriaLabel, ' each configuration ') into: [ :result :mutant |
+	mutants do: [ :mutant |
 		mutant install.
-		benchmarkConfigs do: [ :config | result add: config run called: config title forMutant: mutant withBaseline: config result ].
+		benchmarkConfigs do: [ :config |
+			result detect: (self run: config for: self time untilSatisfiesFor: result) from: config forMutant: mutant.
+		].
 		mutant uninstall.
 		result.
-	]
+	].
+
+	^ result end.
 ]
 
 { #category : 'initialization' }
@@ -50,6 +59,18 @@ BenchAnalysis >> benchmarkConfigs [
 BenchAnalysis >> classesToMutate [
 
 	self subclassResponsibility
+]
+
+{ #category : 'as yet unclassified' }
+BenchAnalysis >> countOfCases [
+
+	^ maxCases 
+]
+
+{ #category : 'as yet unclassified' }
+BenchAnalysis >> countOfCases: anAmount [
+
+	maxCases := anAmount 
 ]
 
 { #category : 'private' }
@@ -77,9 +98,41 @@ BenchAnalysis >> mutants [
 	^ (MTManualMutatedMethodGenerationStrategy new targetMethods: self methodsToMutate) mutationsFor: PBTPerformanceOperations
 ]
 
+{ #category : 'private' }
+BenchAnalysis >> run: config for: aTime untilSatisfiesFor: result [
+
+	^ config runWithCriteria: [ :tests :elapsedTime :coverage |
+		tests isEmpty or: [
+			((self shouldStop: tests in: elapsedTime) or: [ result testSatisfy: tests last for: config ]) not
+		]
+	].
+
+
+]
+
 { #category : 'initialization' }
 BenchAnalysis >> setUpBenchmarks [
 
 	benchmarkConfigs := self benchmarkConfigs.
 	benchmarkConfigs do: [ :config | config generateTests ]
+]
+
+{ #category : 'private' }
+BenchAnalysis >> shouldStop: tests in: elapsedTime [
+
+	^ time
+		  ifNil: [ tests size >= maxCases ]
+		  ifNotNil: [ (Duration milliSeconds: time) >= elapsedTime ]
+]
+
+{ #category : 'accessing' }
+BenchAnalysis >> time [
+	
+	^ time
+]
+
+{ #category : 'accessing' }
+BenchAnalysis >> time: aTime [
+
+	time := aTime 
 ]

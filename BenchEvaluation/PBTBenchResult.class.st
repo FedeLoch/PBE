@@ -25,6 +25,12 @@ PBTBenchResult >> stdev [
 ]
 
 { #category : 'accessing' }
+PBTBenchResult >> tests [ 
+
+	^ result tests
+]
+
+{ #category : 'accessing' }
 PBTBenchResult >> time [ 
 
 	^ result times average

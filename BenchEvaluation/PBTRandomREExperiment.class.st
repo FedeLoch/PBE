@@ -1,9 +1,6 @@
 Class {
 	#name : 'PBTRandomREExperiment',
 	#superclass : 'PBTBugDetectionExperiment',
-	#instVars : [
-		'time'
-	],
 	#category : 'BenchEvaluation-Analysis',
 	#package : 'BenchEvaluation',
 	#tag : 'Analysis'

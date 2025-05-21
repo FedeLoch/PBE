@@ -117,7 +117,7 @@ BenchAnalysisResult >> thresholdOf: config [
 	stdevs := 1.
 	
 	baselines at: config title ifAbsentPut: config baseline.
-	
+	1 halt.
 	baseline := baselines at: config title.
 
 	^ baseline median + (stdevs * baseline stdev)

@@ -17,24 +17,6 @@ PBTREEPerformanceMutantExperiment class >> analyze [
 ]
 
 { #category : 'as yet unclassified' }
-PBTREEPerformanceMutantExperiment class >> performExperimentsByCounOfCases: cases [
-
-	^ cases collect: [ :amount | self new countOfCases: amount; analyze ]
-]
-
-{ #category : 'as yet unclassified' }
-PBTREEPerformanceMutantExperiment class >> performExperimentsWithTimes: times [
-
-	^ times collect: [ :time | self new time: time; analyze ]
-]
-
-{ #category : 'as yet unclassified' }
-PBTREEPerformanceMutantExperiment class >> performExperimentsWithTimes: times threshold: aThreshold [
-
-	^ times collect: [ :time | self new time: time; threshold: aThreshold; analyze ]
-]
-
-{ #category : 'as yet unclassified' }
 PBTREEPerformanceMutantExperiment >> baseLinePbtConfiguration [
 
 	^ self

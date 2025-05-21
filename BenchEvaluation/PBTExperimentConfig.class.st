@@ -15,7 +15,7 @@ Class {
 
 { #category : 'accessing' }
 PBTExperimentConfig >> cases: amount [ 
-	
+
 	cases := amount
 ]
 

@@ -17,18 +17,6 @@ PBTBugDetectionExperiment class >> analyze [
 ]
 
 { #category : 'as yet unclassified' }
-PBTBugDetectionExperiment >> countOfCases [
-
-	^ countOfCases
-]
-
-{ #category : 'as yet unclassified' }
-PBTBugDetectionExperiment >> countOfCases: anAmount [
-
-	countOfCases := anAmount 
-]
-
-{ #category : 'as yet unclassified' }
 PBTBugDetectionExperiment >> executionConfig: schema called: title [
 
 	schema guidedByExecutionTime.

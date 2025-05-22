@@ -18,7 +18,7 @@ BenchConfig >> baseline [
 
 { #category : 'as yet unclassified' }
 BenchConfig >> generateTests [
-
+	
 	baseline := self run.
 ]
 

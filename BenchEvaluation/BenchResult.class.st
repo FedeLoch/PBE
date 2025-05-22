@@ -15,6 +15,12 @@ BenchResult class >> from: benchmarkResult [
 	^ self new result: benchmarkResult
 ]
 
+{ #category : 'as yet unclassified' }
+BenchResult >> boxPlot [
+
+	self subclassResponsibility .
+]
+
 { #category : 'accessing' }
 BenchResult >> median [
 
@@ -25,6 +31,17 @@ BenchResult >> median [
 BenchResult >> mutalkTest [
 
 	^ self subclassResponsibility 
+]
+
+{ #category : 'printing' }
+BenchResult >> printOn: aStream [
+
+	super printOn: aStream.
+	aStream nextPut: $(.
+	aStream print: self time asFloat.
+	aStream nextPutAll: '+-'.
+	aStream print: self stdev asFloat.
+	aStream nextPut: $)
 ]
 
 { #category : 'accessing' }

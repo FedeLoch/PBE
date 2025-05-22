@@ -28,7 +28,7 @@ PBTREEPerformanceMutantExperiment >> baseLinePbtConfiguration [
 { #category : 'as yet unclassified' }
 PBTREEPerformanceMutantExperiment >> criteriaLabel [
 
-	^ time ifNil: [ countOfCases asString, ' times' ] ifNotNil: [ self time humanReadablePrintString ]
+	^ time ifNil: [ maxCases asString, ' times' ] ifNotNil: [ self time humanReadablePrintString ]
 ]
 
 { #category : 'as yet unclassified' }

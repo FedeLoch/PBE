@@ -6,6 +6,20 @@ Class {
 	#tag : 'Analysis'
 }
 
+{ #category : 'as yet unclassified' }
+PBTBenchResult >> boxPlot [
+	
+	| plot tests |
+	
+	tests := result tests.
+
+	plot := RSBoxPlot new y: (tests ifEmpty: [ { 1 } ] ifNotEmpty: [ (tests collect: [ :t | t result time asMilliSeconds ]) ]); yLog; yourself.
+	plot horizontalTick numberOfTicks: tests size.
+	plot ylabel: 'Time execution in milliseconds'; xlabel: '( ', tests size asString, ' cases )'.
+	
+	^ plot asShape
+]
+
 { #category : 'accessing' }
 PBTBenchResult >> median [ 
 	

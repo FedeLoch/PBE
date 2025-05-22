@@ -56,7 +56,14 @@ BenchAnalysisResult >> initialize [
 { #category : 'private - inspector accessing' }
 BenchAnalysisResult >> plotBaselines [
 
-	1 halt.
+	| canvas |
+	
+	canvas := RSCanvas new @ RSCanvasController.
+	canvas addAll: (baselines collect: #boxPlot).
+	
+	RSHorizontalLineLayout new alignBottom; on: canvas shapes.
+	
+	^ canvas
 ]
 
 { #category : 'private - inspector accessing' }
@@ -117,7 +124,6 @@ BenchAnalysisResult >> thresholdOf: config [
 	stdevs := 1.
 	
 	baselines at: config title ifAbsentPut: config baseline.
-	1 halt.
 	baseline := baselines at: config title.
 
 	^ baseline median + (stdevs * baseline stdev)

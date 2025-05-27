@@ -11,4 +11,4 @@ Metacello new
 		onConflictUseIncoming;
 		load.
 
-PBTREEPerformanceMutantExperiment performExperimentAndSave.
+(Smalltalk at: #PBTREEPerformanceMutantExperiment) performExperimentAndSave.

@@ -36,8 +36,8 @@ BenchAnalysisResult >> detect: test from: config forMutant: mutant [
 	((comparisons at: config title)
 		at: mutant operator title)
 		at: test name
-		update: [ :val | val + ((self detected: test from: config) ifTrue: [ 1 ] ifFalse: [ 0 ]) ]
-		initial: 0
+		update: [ :set | ((self detected: test from: config) ifTrue: [ set copyWith: mutant ] ifFalse: [ set ]) ]
+		initial: Set new
 ]
 
 { #category : 'adding' }
@@ -91,7 +91,7 @@ BenchAnalysisResult >> plotBenchmarkConfig: strategy [
 	tests := (comparisons at: strategy at: mutantKeys first) keys.
 	values := tests inject: OrderedCollection new into: [ :matrix :test | | localValues |
 		localValues := mutantKeys collect: [ :mutant |
-			Fraction numerator: ((comparisons at: strategy at: mutant) at: test) denominator: (mutants at: mutant)
+			Fraction numerator: ((comparisons at: strategy at: mutant) at: test) size denominator: (mutants at: mutant)
 		].
 		matrix add: localValues.
 		matrix

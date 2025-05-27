@@ -56,13 +56,12 @@ BenchAnalysis >> analyze [
 	
 	result := (BenchAnalysisResult new title: 'Result running ', self criteriaLabel, ' each configuration ')
 		benchmarkConfigs: benchmarkConfigs; start.
-	
-	"Cut down the amount of mutatns"
+
+	result mutants: mutants.
 	mutants do: [ :mutant |
 		mutant install.
 		benchmarkConfigs do: [ :config |
-			config tests do: [ :test | result detect: test from: config forMutant: mutant ].
-"			result detect: (self run: config for: self time untilSatisfiesFor: result) from: config forMutant: mutant."
+			config tests do: [ :test | result detect: test from: config forMutant: mutant ]
 		].
 		mutant uninstall.
 		result.

@@ -30,9 +30,7 @@ BenchAnalysisResult >> benchmarkConfigs: someBenchmarkConfigs [
 BenchAnalysisResult >> detect: test from: config forMutant: mutant [
 
 	comparisons at: config title ifAbsentPut: Dictionary new.
-	
-	mutants at: mutant operator title update: [ :val | val + 1 ] initial: 0.
-	
+
 	(comparisons at: config title) at: mutant operator title ifAbsentPut: Dictionary new.
 	
 	((comparisons at: config title)
@@ -63,37 +61,48 @@ BenchAnalysisResult >> initialize [
 	
 ]
 
-{ #category : 'private - inspector accessing' }
-BenchAnalysisResult >> plotBaselines [
+{ #category : 'adding' }
+BenchAnalysisResult >> mutants: someMutants [
 
-	^ benchmarkConfigs do: [ :config |
-		config plotBaselines inspect
-	]
+	mutants := someMutants groupedBy: [ :m | m operator title ].
 ]
 
 { #category : 'private - inspector accessing' }
-BenchAnalysisResult >> plotBenchmarksEffectiveness [
+BenchAnalysisResult >> plotBaselines [
 
-	| heatMap values |
+	^ benchmarkConfigs do: [ :config | config plotBaselines inspect ]
+]
+
+{ #category : 'private - inspector accessing' }
+BenchAnalysisResult >> plotBenchmarkConfig: strategy [
+
+	| heatMap values tests mutantKeys |
 	
 	heatMap := RSHeatmap new.
 	heatMap colorPalette: (NSScale linear range: { Color white . Color red }).
 	heatMap shape extent: 60@40.
 	
-	values := comparisons keys inject: OrderedCollection new into: [ :matrix :strategy | | localValues |
-		localValues := (self sortedMutantsAt: strategy) collect: [ :mutant |
-			Fraction numerator: (comparisons at: strategy at: mutant) denominator: (mutants at: mutant)
+	mutantKeys := (comparisons at: strategy) keys sorted.
+	tests := (comparisons at: strategy at: mutantKeys first) keys.
+	values := tests inject: OrderedCollection new into: [ :matrix :test | | localValues |
+		localValues := mutantKeys collect: [ :mutant |
+			Fraction numerator: ((comparisons at: strategy at: mutant) at: test) denominator: (mutants at: mutant) size
 		].
-		
 		matrix add: localValues.
 		matrix
 	].
-	
-	heatMap objectsX: (self sortedMutantsAt: comparisons keys first).
-	heatMap objectsY: comparisons keys.
+
+	heatMap objectsX: mutantKeys.
+	heatMap objectsY: (1 to: tests size).
    heatMap dataMatrix: values.
 	
 	^ heatMap open
+]
+
+{ #category : 'private - inspector accessing' }
+BenchAnalysisResult >> plotBenchmarksEffectiveness [
+
+	comparisons keysDo: [ :key | self plotBenchmarkConfig: key ]
 ]
 
 { #category : 'private - inspector accessing' }

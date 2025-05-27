@@ -6,12 +6,20 @@ Class {
 		'target',
 		'time',
 		'cases',
-		'tests'
+		'tests',
+		'baselines',
+		'countOfTimesPerTest'
 	],
 	#category : 'BenchEvaluation-Analysis',
 	#package : 'BenchEvaluation',
 	#tag : 'Analysis'
 }
+
+{ #category : 'as yet unclassified' }
+PBTExperimentConfig >> averageFor: test [
+
+	^ (baselines at: test name) third
+]
 
 { #category : 'accessing' }
 PBTExperimentConfig >> cases: amount [ 
@@ -21,9 +29,42 @@ PBTExperimentConfig >> cases: amount [
 
 { #category : 'as yet unclassified' }
 PBTExperimentConfig >> generateTests [
+	
+	tests := self run tests.
+	baselines := tests inject: Dictionary new into: [ :blines :test | | times |
+		times := test runTimes: countOfTimesPerTest withInternalIterations: (test autoTuneIterationsFor: 300 milliSeconds).
+		blines at: test name put: { times median . times stdev. times average }.
+		blines.
+	].
+]
 
-	super generateTests.
-	tests := { baseline mutalkTest }.
+{ #category : 'initialization' }
+PBTExperimentConfig >> initialize [ 
+
+	super initialize.
+	countOfTimesPerTest := 30
+]
+
+{ #category : 'as yet unclassified' }
+PBTExperimentConfig >> medianFor: test [
+
+	^ (baselines at: test name) first
+]
+
+{ #category : 'private - inspector accessing' }
+PBTExperimentConfig >> plotBaselines [
+
+	| plot medians stdevs allKeys |
+	allKeys := baselines keys.
+	medians := allKeys collect: [ :key | (baselines at: key) first ].
+	stdevs := allKeys collect: [ :key | (baselines at: key) last ].
+	plot := (RSBarPlot barHeights: medians) errors: stdevs.
+	plot horizontalTick fromNames: (0 to: allKeys size).
+	plot verticalTick labelConversion: [ :val | val asFloat printShowingDecimalPlaces: 5 ].
+	plot title: 'Baselines of tests - ', self title.
+	plot yLog.
+	1 halt.
+	^ plot
 ]
 
 { #category : 'accessing' }
@@ -53,6 +94,12 @@ PBTExperimentConfig >> schema: anSchema [
 
 	schema := anSchema 
 
+]
+
+{ #category : 'as yet unclassified' }
+PBTExperimentConfig >> stdevFor: test [
+
+	^ (baselines at: test name) last
 ]
 
 { #category : 'accessing' }

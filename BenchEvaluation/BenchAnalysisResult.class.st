@@ -3,38 +3,49 @@ Class {
 	#superclass : 'Object',
 	#instVars : [
 		'comparisons',
-		'fixedThreshold',
 		'mutants',
 		'title',
 		'initialTime',
 		'elapsedTime',
-		'baselines'
+		'benchmarkConfigs'
 	],
 	#category : 'BenchEvaluation-Analysis',
 	#package : 'BenchEvaluation',
 	#tag : 'Analysis'
 }
 
+{ #category : 'accessing' }
+BenchAnalysisResult >> benchmarkConfigs [
+
+	^ benchmarkConfigs
+]
+
+{ #category : 'accessing' }
+BenchAnalysisResult >> benchmarkConfigs: someBenchmarkConfigs [
+
+	benchmarkConfigs := someBenchmarkConfigs
+]
+
 { #category : 'adding' }
-BenchAnalysisResult >> detect: benchResult from: config forMutant: mutant [
+BenchAnalysisResult >> detect: test from: config forMutant: mutant [
 
 	comparisons at: config title ifAbsentPut: Dictionary new.
 	
 	mutants at: mutant operator title update: [ :val | val + 1 ] initial: 0.
 	
-	(comparisons at: config title)
-		at: mutant operator title
-		update: [ :val | val + ((self detected: benchResult from: config) ifTrue: [ 1 ] ifFalse: [ 0 ]) ]
+	(comparisons at: config title) at: mutant operator title ifAbsentPut: Dictionary new.
+	
+	((comparisons at: config title)
+		at: mutant operator title)
+		at: test name
+		update: [ :val | val + ((self detected: test from: config) ifTrue: [ 1 ] ifFalse: [ 0 ]) ]
 		initial: 0
 ]
 
 { #category : 'adding' }
-BenchAnalysisResult >> detected: benchResult from: config [
+BenchAnalysisResult >> detected: test from: config [
 
-	| threshold |
-	threshold := self thresholdOf: config.
-	
-	^ benchResult tests anySatisfy: [ :test | self testSatisfy: test with: threshold ]
+	^ self testSatisfy: test with: (self thresholdOf: config for: test)
 ]
 
 { #category : 'accessing' }
@@ -48,7 +59,6 @@ BenchAnalysisResult >> initialize [
 
 	super initialize.
 	comparisons := Dictionary new.
-	baselines := Dictionary new.
 	mutants := Dictionary new.
 	
 ]
@@ -56,14 +66,9 @@ BenchAnalysisResult >> initialize [
 { #category : 'private - inspector accessing' }
 BenchAnalysisResult >> plotBaselines [
 
-	| canvas |
-	
-	canvas := RSCanvas new @ RSCanvasController.
-	canvas addAll: (baselines collect: #boxPlot).
-	
-	RSHorizontalLineLayout new alignBottom; on: canvas shapes.
-	
-	^ canvas
+	^ benchmarkConfigs do: [ :config |
+		config plotBaselines inspect
+	]
 ]
 
 { #category : 'private - inspector accessing' }
@@ -106,27 +111,24 @@ BenchAnalysisResult >> start [
 { #category : 'tests' }
 BenchAnalysisResult >> testSatisfy: aTest for: aConfig [
 
-	^ self testSatisfy: aTest with: (self thresholdOf: aConfig) 
+	^ self testSatisfy: aTest with: (self thresholdOf: aConfig for: aTest) 
 	
 ]
 
 { #category : 'tests' }
-BenchAnalysisResult >> testSatisfy: aTest with: threshold [
+BenchAnalysisResult >> testSatisfy: test with: threshold [
 
-	^ aTest time asMilliSeconds >= threshold
+	^ test runTimeAutotuned >= threshold
 	
 ]
 
 { #category : 'adding' }
-BenchAnalysisResult >> thresholdOf: config [
+BenchAnalysisResult >> thresholdOf: config for: test [
 
-	| stdevs baseline |
+	| stdevs |
 	stdevs := 1.
-	
-	baselines at: config title ifAbsentPut: config baseline.
-	baseline := baselines at: config title.
 
-	^ baseline median + (stdevs * baseline stdev)
+	^ (config averageFor: test) + (stdevs * (config stdevFor: test))
 ]
 
 { #category : 'adding' }

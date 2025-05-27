@@ -13,9 +13,10 @@ Class {
 }
 
 { #category : 'as yet unclassified' }
-BenchAnalysis class >> performExperimentsByCounOfCases: cases [
+BenchAnalysis class >> performExperimentsByCounOfCases: countOfCases [
 
-	^ cases collect: [ :amount | self new countOfCases: amount; analyze ]
+	"N, count of tests per config to eval"
+	^ self new countOfCases: countOfCases; analyze
 ]
 
 { #category : 'as yet unclassified' }
@@ -53,12 +54,15 @@ BenchAnalysis >> analyze [
 	| result |
 	self setUpBenchmarks.
 	
-	result := (BenchAnalysisResult new title: 'Result running ', self criteriaLabel, ' each configuration ') start.
-
+	result := (BenchAnalysisResult new title: 'Result running ', self criteriaLabel, ' each configuration ')
+		benchmarkConfigs: benchmarkConfigs; start.
+	
+	"Cut down the amount of mutatns"
 	mutants do: [ :mutant |
 		mutant install.
 		benchmarkConfigs do: [ :config |
-			result detect: (self run: config for: self time untilSatisfiesFor: result) from: config forMutant: mutant.
+			config tests do: [ :test | result detect: test from: config forMutant: mutant ].
+"			result detect: (self run: config for: self time untilSatisfiesFor: result) from: config forMutant: mutant."
 		].
 		mutant uninstall.
 		result.
@@ -119,6 +123,8 @@ BenchAnalysis >> mutants [
 { #category : 'private' }
 BenchAnalysis >> run: config for: aTime untilSatisfiesFor: result [
 
+	"TODO: DEPRECATED"
+	1 halt.
 	^ config runWithCriteria: [ :tests :elapsedTime :coverage |
 		tests isEmpty or: [
 			((self shouldStop: tests in: elapsedTime) or: [ result testSatisfy: tests last for: config ]) not

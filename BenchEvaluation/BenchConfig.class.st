@@ -22,6 +22,18 @@ BenchConfig >> generateTests [
 	baseline := self run.
 ]
 
+{ #category : 'as yet unclassified' }
+BenchConfig >> medianFor: test [
+
+	self subclassResponsibility 
+]
+
+{ #category : 'private - inspector accessing' }
+BenchConfig >> plotBaselines [
+
+	self subclassResponsibility 
+]
+
 { #category : 'running' }
 BenchConfig >> run [
 
@@ -42,6 +54,12 @@ BenchConfig >> runAndSaveBaseline [
 
 { #category : 'as yet unclassified' }
 BenchConfig >> runWithCriteria: aBlock [
+
+	self subclassResponsibility 
+]
+
+{ #category : 'as yet unclassified' }
+BenchConfig >> stdevFor: test [
 
 	self subclassResponsibility 
 ]

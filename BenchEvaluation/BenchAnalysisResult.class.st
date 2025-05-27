@@ -49,7 +49,7 @@ BenchAnalysisResult >> detected: test from: config [
 { #category : 'accessing' }
 BenchAnalysisResult >> end [
 
-	elapsedTime := Duration milliSeconds: (Smalltalk highResClock) - initialTime. 
+	elapsedTime := Duration nanoSeconds: ((Smalltalk highResClock) - initialTime). 
 ]
 
 { #category : 'adding' }
@@ -64,7 +64,12 @@ BenchAnalysisResult >> initialize [
 { #category : 'adding' }
 BenchAnalysisResult >> mutants: someMutants [
 
-	mutants := someMutants groupedBy: [ :m | m operator title ].
+	| grouped |
+	grouped := someMutants groupedBy: [ :m | m operator title ].
+	mutants := grouped keys inject: Dictionary new into: [ :dic :key |
+		dic at: key put: (grouped at: key) size.
+		dic
+	] 
 ]
 
 { #category : 'private - inspector accessing' }
@@ -86,7 +91,7 @@ BenchAnalysisResult >> plotBenchmarkConfig: strategy [
 	tests := (comparisons at: strategy at: mutantKeys first) keys.
 	values := tests inject: OrderedCollection new into: [ :matrix :test | | localValues |
 		localValues := mutantKeys collect: [ :mutant |
-			Fraction numerator: ((comparisons at: strategy at: mutant) at: test) denominator: (mutants at: mutant) size
+			Fraction numerator: ((comparisons at: strategy at: mutant) at: test) denominator: (mutants at: mutant)
 		].
 		matrix add: localValues.
 		matrix

@@ -15,6 +15,12 @@ Class {
 	#tag : 'Analysis'
 }
 
+{ #category : 'ston-core' }
+PBTExperimentConfig class >> stonAllInstVarNames [
+
+	^ super stonAllInstVarNames copyWithoutAll: #( target )
+]
+
 { #category : 'as yet unclassified' }
 PBTExperimentConfig >> averageFor: test [
 

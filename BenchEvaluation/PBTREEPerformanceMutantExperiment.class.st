@@ -17,6 +17,19 @@ PBTREEPerformanceMutantExperiment class >> analyze [
 ]
 
 { #category : 'as yet unclassified' }
+PBTREEPerformanceMutantExperiment class >> performExperimentAndSave [
+
+	| file result |
+	result := self performExperimentsByCounOfCases: 100.
+
+	file := 'benchmarkExperimentResult' asFileReference, 'ston'.
+	
+	file ensureDelete.
+	file writeStreamDo: [ :stream | STON put: result onStreamPretty: stream ].
+	^ result
+]
+
+{ #category : 'as yet unclassified' }
 PBTREEPerformanceMutantExperiment >> baseLinePbtConfiguration [
 
 	^ self

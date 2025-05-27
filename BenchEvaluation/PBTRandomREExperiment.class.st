@@ -170,10 +170,10 @@ PBTRandomREExperiment >> regexByProp: props and: feedback [
 		[
 		| maybe |
 		maybe := (props at: 'grammar') genBy: feedback.
-		maybe asRegex.
+		(PBTRegex fromString: maybe) compileRegex.
 		regex := maybe ]
 			on: Error
-			do: [ :e | "1 halt." ] ].
+			do: [ :e | 1 halt."1 halt." ] ].
 
 	^ regex
 ]
@@ -189,7 +189,7 @@ PBTRandomREExperiment >> schemaWith: regexConstraint [
 		             | regex |
 		             regex := self regexByProp: props and: feedback.
 		             props at: 'input' put: regex minimalStringMatching.
-		             regex asRegex ].
+		             (PBTRegex fromString: regex) ].
 
 	receiverConstraint := PBTObjectConstraint new
 		                      objectClass: RxMatcher;
@@ -208,7 +208,7 @@ PBTRandomREExperiment >> schemaWith: regexConstraint [
 	score := [ :re :inputs :res |
 	         | coreScore gnoccoScore anotherRegex base |
 	         coreScore := res time asMilliSeconds.
-	         anotherRegex := inputs first asRegex.
+	         anotherRegex := PBTRegex fromString: inputs first.
 	
 				Smalltalk garbageCollect.
 				base := Smalltalk highResClock.

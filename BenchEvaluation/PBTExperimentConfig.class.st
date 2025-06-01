@@ -62,8 +62,8 @@ PBTExperimentConfig >> plotBaselines [
 
 	| plot medians stdevs allKeys |
 	allKeys := baselines keys.
-	medians := allKeys collect: [ :key | (baselines at: key) first ].
-	stdevs := allKeys collect: [ :key | (baselines at: key) last ].
+	medians := allKeys collect: [ :key | (baselines at: key) last ].
+	stdevs := allKeys collect: [ :key | (baselines at: key) second ].
 	plot := (RSBarPlot barHeights: medians) errors: stdevs.
 	plot horizontalTick fromNames: (0 to: allKeys size).
 	plot verticalTick labelConversion: [ :val | val asFloat printShowingDecimalPlaces: 5 ].

@@ -29,9 +29,9 @@ BenchAnalysisResult >> benchmarkConfigs: someBenchmarkConfigs [
 { #category : 'adding' }
 BenchAnalysisResult >> detect: test from: config forMutant: mutant [
 
-	comparisons at: config title ifAbsentPut: Dictionary new.
+	comparisons at: config title ifAbsentPut: OrderedDictionary new.
 
-	(comparisons at: config title) at: mutant operator title ifAbsentPut: Dictionary new.
+	(comparisons at: config title) at: mutant operator title ifAbsentPut: OrderedDictionary new.
 	
 	((comparisons at: config title)
 		at: mutant operator title)
@@ -56,8 +56,8 @@ BenchAnalysisResult >> end [
 BenchAnalysisResult >> initialize [ 
 
 	super initialize.
-	comparisons := Dictionary new.
-	mutants := Dictionary new.
+	comparisons := OrderedDictionary new.
+	mutants := OrderedDictionary new.
 	
 ]
 

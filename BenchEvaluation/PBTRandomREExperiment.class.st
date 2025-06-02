@@ -10,9 +10,9 @@ Class {
 PBTRandomREExperiment >> benchmarkConfigs [
 
 	^ {
-		  self mctsConfig.
-"		  self hillClimbingConfig.
-		  self hillClimbingAndOptConfig.
+		  "self mctsConfig."
+		  self hillClimbingConfig.
+"		  self hillClimbingAndOptConfig.
 		  self sdGenConfig.
 		  self gramatronConfig"
 	}

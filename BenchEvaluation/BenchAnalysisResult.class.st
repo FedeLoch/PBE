@@ -7,7 +7,8 @@ Class {
 		'title',
 		'initialTime',
 		'elapsedTime',
-		'benchmarkConfigs'
+		'benchmarkConfigs',
+		'experiment'
 	],
 	#category : 'BenchEvaluation-Analysis',
 	#package : 'BenchEvaluation',
@@ -50,6 +51,18 @@ BenchAnalysisResult >> detected: test from: config [
 BenchAnalysisResult >> end [
 
 	elapsedTime := Duration nanoSeconds: ((Smalltalk highResClock) - initialTime). 
+]
+
+{ #category : 'accessing' }
+BenchAnalysisResult >> experiment [
+
+	^ experiment 
+]
+
+{ #category : 'accessing' }
+BenchAnalysisResult >> experiment: anExperiment [
+
+	experiment := anExperiment 
 ]
 
 { #category : 'adding' }
@@ -108,6 +121,15 @@ BenchAnalysisResult >> plotBenchmarkConfig: strategy [
 BenchAnalysisResult >> plotBenchmarksEffectiveness [
 
 	comparisons keysDo: [ :key | self plotBenchmarkConfig: key ]
+]
+
+{ #category : 'running' }
+BenchAnalysisResult >> runTest: testId [
+	
+	| testCaseIndex |
+	
+	testCaseIndex := benchmarkConfigs first tests findFirst: [ :test | test name = testId ].
+	^ experiment executeExperimentFor: (benchmarkConfigs first tests at: testCaseIndex)
 ]
 
 { #category : 'private - inspector accessing' }

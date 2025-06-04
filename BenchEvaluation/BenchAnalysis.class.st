@@ -55,6 +55,7 @@ BenchAnalysis >> analyze [
 	self setUpBenchmarks.
 	
 	result := (BenchAnalysisResult new title: 'Result running ', self criteriaLabel, ' each configuration ')
+		experiment: self;
 		benchmarkConfigs: benchmarkConfigs; start.
 
 	result mutants: mutants.
@@ -98,6 +99,24 @@ BenchAnalysis >> countOfCases: anAmount [
 BenchAnalysis >> criteriaLabel [
 
 	^ self subclassResponsibility 
+]
+
+{ #category : 'private' }
+BenchAnalysis >> executeExperimentFor: test [
+
+	| result |
+	result := (BenchAnalysisResult new title: 'Re-executing test')
+		experiment: self; benchmarkConfigs: {}; start.
+
+	result mutants: mutants.
+	mutants do: [ :mutant |
+		mutant install.
+		result detect: test from: (SingletonTestConfig from: test) forMutant: mutant
+		mutant uninstall.
+		result.
+	].
+
+	^ result end.
 ]
 
 { #category : 'initialization' }

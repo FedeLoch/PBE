@@ -111,7 +111,7 @@ BenchAnalysis >> executeExperimentFor: test [
 	result mutants: mutants.
 	mutants do: [ :mutant |
 		mutant install.
-		result detect: test from: (SingletonTestConfig from: test) forMutant: mutant
+		result detect: test from: (SingletonTestConfig from: test) forMutant: mutant.
 		mutant uninstall.
 		result.
 	].

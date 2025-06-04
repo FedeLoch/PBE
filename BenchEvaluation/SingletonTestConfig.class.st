@@ -55,3 +55,9 @@ SingletonTestConfig >> test: aTest [
 	times := test runTimes: countOfTimesPerTest withInternalIterations: (test autoTuneIterationsFor: 300 milliSeconds).
 	baseline := { times median . times stdev. times average }.
 ]
+
+{ #category : 'accessing' }
+SingletonTestConfig >> tests [
+
+	^ { test }
+]

@@ -104,14 +104,17 @@ BenchAnalysis >> criteriaLabel [
 { #category : 'private' }
 BenchAnalysis >> executeExperimentFor: test [
 
-	| result |
+	| result config |
+	
+	config := SingletonTestConfig from: test.
 	result := (BenchAnalysisResult new title: 'Re-executing test')
-		experiment: self; benchmarkConfigs: {}; start.
+		experiment: self; benchmarkConfigs: { config }; start.
 
 	result mutants: mutants.
+	
 	mutants do: [ :mutant |
 		mutant install.
-		result detect: test from: (SingletonTestConfig from: test) forMutant: mutant.
+		result detect: test from: config forMutant: mutant.
 		mutant uninstall.
 		result.
 	].

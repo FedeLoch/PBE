@@ -27,6 +27,39 @@ BenchAnalysisResult >> benchmarkConfigs: someBenchmarkConfigs [
 	benchmarkConfigs := someBenchmarkConfigs
 ]
 
+{ #category : 'as yet unclassified' }
+BenchAnalysisResult >> codeCoverageCorrelation [
+
+	comparisons keysDo: [ :key | self codeCoverageCorrelation: key ]
+]
+
+{ #category : 'as yet unclassified' }
+BenchAnalysisResult >> codeCoverageCorrelation: strategy [
+
+	(comparisons at: strategy) keys sorted do: [ :mutantKey |
+		self codeCoverageCorrelation: strategy mutant: mutantKey
+	]
+]
+
+{ #category : 'as yet unclassified' }
+BenchAnalysisResult >> codeCoverageCorrelation: strategy mutant: mutant [
+
+	| plot tests |
+	plot := RSScatterPlot new.
+	tests := (benchmarkConfigs at:
+		          (benchmarkConfigs findFirst: [ :config |
+			           config title = strategy ])) tests.
+
+	plot x: ((comparisons at: strategy at: mutant) keys collect: [ :test |
+		((comparisons at: strategy at: mutant) at: test) size * 100 / (mutants at: mutant)
+	]) y: (tests collect: [ :test |
+		test result coverageResult ifNil: [ 0 ]
+			ifNotNil: [ test result coverageResult percentage ]
+	]).
+
+	^ plot inspect
+]
+
 { #category : 'adding' }
 BenchAnalysisResult >> detect: test from: config forMutant: mutant [
 

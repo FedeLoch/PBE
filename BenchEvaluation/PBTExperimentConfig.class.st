@@ -77,9 +77,9 @@ PBTExperimentConfig >> plotBaselines [
 PBTExperimentConfig >> run [
 
 	^ PBTBenchResult from: (time ifNil: [
-		PBTRunner testWithLowCost: target from: schema times: cases
+		PBTRunner testWithPackageCoverage: target from: schema times: cases
 	] ifNotNil: [
-		PBTRunner testWithLowCost: target from: schema for: time
+		PBTRunner testWithPackageCoverage: target from: schema for: time
 	])
 ]
 

@@ -30,6 +30,37 @@ PBTREEPerformanceMutantExperiment class >> performExperimentAndSave [
 ]
 
 { #category : 'as yet unclassified' }
+PBTREEPerformanceMutantExperiment class >> performExperimentsByCounOfCases: countOfCases [
+
+	"N, count of tests per config to eval"
+	^ self new countOfCases: countOfCases; analyzeWithTunnedMutants
+]
+
+{ #category : 'as yet unclassified' }
+PBTREEPerformanceMutantExperiment >> analyzeWithTunnedMutants [
+
+	| result |
+	self setUpBenchmarks.
+	
+	result := (BenchAnalysisResult new title: 'Result running ', self criteriaLabel, ' each configuration ')
+		experiment: self;
+		benchmarkConfigs: benchmarkConfigs; start.
+
+	result mutants: mutants.
+	benchmarkConfigs do: [ :config |
+			config tests do: [ :test |
+				(self mutantsFor: test) do: [ :mutant |
+					mutant install.
+					result detect: test from: config forMutant: mutant.
+					mutant uninstall.
+				]
+			]
+	].
+
+	^ result end.
+]
+
+{ #category : 'as yet unclassified' }
 PBTREEPerformanceMutantExperiment >> baseLinePbtConfiguration [
 
 	^ self
@@ -56,6 +87,12 @@ PBTREEPerformanceMutantExperiment >> mutants [
 	^ (MTManualMutatedMethodGenerationStrategy new targetMethods:
 		   self target sendReachableMethods) mutationsFor:
 		  PBTPerformanceOperations
+]
+
+{ #category : 'as yet unclassified' }
+PBTREEPerformanceMutantExperiment >> mutantsFor: test [
+
+	^ (MTManualMutatedMethodGenerationStrategy new targetMethods: self methodsToMutate) mutationsFor: (PBTPerformanceTestOperations test: test)
 ]
 
 { #category : 'as yet unclassified' }

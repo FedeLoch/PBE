@@ -2,7 +2,8 @@ Class {
 	#name : 'MTAddSleepOperator',
 	#superclass : 'MTPredicateBasedMutantOperator',
 	#instVars : [
-		'milliseconds'
+		'milliseconds',
+		'description'
 	],
 	#category : 'BenchEvaluation-PerformanceMutants',
 	#package : 'BenchEvaluation',
@@ -24,7 +25,13 @@ MTAddSleepOperator >> appliesToNode: aNode [
 { #category : 'printing' }
 MTAddSleepOperator >> description [
 
-	^ self milliseconds asString, ' ms'
+	^ description ifNil: [ self milliseconds asString, ' ms' ] ifNotNil: [ description ]
+]
+
+{ #category : 'printing' }
+MTAddSleepOperator >> description: aDescription [
+
+	description := aDescription 
 ]
 
 { #category : 'as yet unclassified' }

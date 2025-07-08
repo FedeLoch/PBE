@@ -12,7 +12,9 @@ Class {
 { #category : 'accessing' }
 PBTPerformanceTestOperations class >> operators [
 
-	^ #( 500 100 10 ) collect: [ :e | MTAddSleepOperator time: (e / test autoTunedIterations) ]
+	^ #( 500 100 10 ) collect: [ :e |
+		(MTAddSleepOperator time: e / test autoTunedIterations) description: e asString, ' ms'
+	]
 ]
 
 { #category : 'accessing' }

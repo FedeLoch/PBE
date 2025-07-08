@@ -9,5 +9,5 @@ Class {
 { #category : 'accessing' }
 PBTPerformanceOperations class >> operators [
 	
-	^ #( 500 100 10 ) collect: [ :e | MTAddSleepOperator time: e ]
+	^ #( 500 100 10 1 ) collect: [ :e | MTAddSleepOperator time: e ]
 ]

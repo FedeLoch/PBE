@@ -46,6 +46,7 @@ BenchAnalysisResult >> codeCoverageCorrelation: strategy mutant: mutant [
 
 	| plot tests |
 	plot := RSScatterPlot new.
+	plot title: mutant.
 	tests := (benchmarkConfigs at:
 		          (benchmarkConfigs findFirst: [ :config |
 			           config title = strategy ])) tests.

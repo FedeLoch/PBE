@@ -44,21 +44,30 @@ BenchAnalysisResult >> codeCoverageCorrelation: strategy [
 { #category : 'as yet unclassified' }
 BenchAnalysisResult >> codeCoverageCorrelation: strategy mutant: mutant [
 
-	| plot tests |
+	| composite plot tests x y |
+	composite := RSCompositeChart new.
 	plot := RSScatterPlot new.
-	plot title: mutant.
+	composite title: mutant.
+	
 	tests := (benchmarkConfigs at:
 		          (benchmarkConfigs findFirst: [ :config |
 			           config title = strategy ])) tests.
 
-	plot x: ((comparisons at: strategy at: mutant) keys collect: [ :test |
+	x := ((comparisons at: strategy at: mutant) keys collect: [ :test |
 		((comparisons at: strategy at: mutant) at: test) size * 100 / (mutants at: mutant)
-	]) y: (tests collect: [ :test |
-		test result coverageResult ifNil: [ 0 ]
-			ifNotNil: [ test result coverageResult percentage ]
 	]).
 
-	^ plot inspect
+	y := (tests collect: [ :test |
+		test result coverageResult ifNil: [ 0 ] ifNotNil: [ test result coverageResult percentage ]
+	]).
+
+	plot x: x y: y.
+	composite xlabel: 'Mutation score'; ylabel: 'Code coverage'.
+	composite add: (self linealRegressionLineFrom: x andY: y).
+	
+
+	composite add: plot.
+	^ composite inspect
 ]
 
 { #category : 'adding' }
@@ -106,6 +115,35 @@ BenchAnalysisResult >> initialize [
 	comparisons := OrderedDictionary new.
 	mutants := OrderedDictionary new.
 	
+]
+
+{ #category : 'as yet unclassified' }
+BenchAnalysisResult >> linealRegressionLineFrom: xs andY: ys [
+
+	| n meanX meanY slope intercept regressionPoints xMin xMax stepCount step |
+	n := xs size.
+	n = 0 ifTrue: [ ^ RSLinePlot new color: Color red ].
+
+	meanX := xs average.
+	meanY := ys average.
+
+	slope := (1 to: xs size) sum: [:i | ((xs at: i) - meanX) * ((ys at: i) - meanY)].
+	slope := slope / ((xs collect: [:x | (x - meanX) squared]) sum).
+	intercept := meanY - (slope * meanX).
+
+	xMin := xs min.
+	xMax := xs max.
+	stepCount := n max: 2.
+	step := (xMax - xMin) asFloat / (stepCount - 1).
+	
+	regressionPoints := (0 to: stepCount - 1) collect: [:i |
+		| x y |
+		x := xMin + (step * i).
+		y := slope * x + intercept.
+		x@y
+	].
+
+	^ RSLinePlot new x: (regressionPoints collect: #x) y: (regressionPoints collect: #y); color: Color red
 ]
 
 { #category : 'adding' }

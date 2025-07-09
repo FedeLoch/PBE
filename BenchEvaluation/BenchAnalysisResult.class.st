@@ -63,7 +63,7 @@ BenchAnalysisResult >> codeCoverageCorrelation: strategy mutant: mutant [
 
 	plot x: x y: y.
 	composite xlabel: 'Mutation score'; ylabel: 'Code coverage'.
-	composite add: (self linealRegressionLineFrom: x andY: y).
+"	composite add: (self linealCorrelationFrom: x andY: y)."
 	
 
 	composite add: plot.
@@ -115,6 +115,11 @@ BenchAnalysisResult >> initialize [
 	comparisons := OrderedDictionary new.
 	mutants := OrderedDictionary new.
 	
+]
+
+{ #category : 'as yet unclassified' }
+BenchAnalysisResult >> linealCorrelationFrom: x andY: y [
+
 ]
 
 { #category : 'as yet unclassified' }

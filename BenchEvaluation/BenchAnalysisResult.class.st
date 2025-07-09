@@ -63,7 +63,7 @@ BenchAnalysisResult >> codeCoverageCorrelation: strategy mutant: mutant [
 
 	plot x: x y: y.
 	composite xlabel: 'Mutation score'; ylabel: 'Code coverage'.
-"	composite add: (self linealCorrelationFrom: x andY: y)."
+	composite add: (self linealRegressionLineFrom: x andY: y).
 	
 
 	composite add: plot.
@@ -118,37 +118,16 @@ BenchAnalysisResult >> initialize [
 ]
 
 { #category : 'as yet unclassified' }
-BenchAnalysisResult >> linealCorrelationFrom: x andY: y [
-
-]
-
-{ #category : 'as yet unclassified' }
 BenchAnalysisResult >> linealRegressionLineFrom: xs andY: ys [
 
-	| n meanX meanY slope intercept regressionPoints xMin xMax stepCount step |
+	| linReg n |
 	n := xs size.
 	n = 0 ifTrue: [ ^ RSLinePlot new color: Color red ].
-
-	meanX := xs average.
-	meanY := ys average.
-
-	slope := (1 to: xs size) sum: [:i | ((xs at: i) - meanX) * ((ys at: i) - meanY)].
-	slope := slope / ((xs collect: [:x | (x - meanX) squared]) sum).
-	intercept := meanY - (slope * meanX).
-
-	xMin := xs min.
-	xMax := xs max.
-	stepCount := n max: 2.
-	step := (xMax - xMin) asFloat / (stepCount - 1).
 	
-	regressionPoints := (0 to: stepCount - 1) collect: [:i |
-		| x y |
-		x := xMin + (step * i).
-		y := slope * x + intercept.
-		x@y
-	].
+	linReg := PMLinearRegression new.
+	(1 to: n) do: [:i | linReg add: (xs at: i) @ (ys at: i) ].
 
-	^ RSLinePlot new x: (regressionPoints collect: #x) y: (regressionPoints collect: #y); color: Color red
+	^ RSLinePlot new y: ((1 to: xs max) collect: [ :x | linReg slope * x + linReg intercept ])
 ]
 
 { #category : 'adding' }

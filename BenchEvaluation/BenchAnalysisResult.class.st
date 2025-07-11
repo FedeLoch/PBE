@@ -44,29 +44,34 @@ BenchAnalysisResult >> codeCoverageCorrelation: strategy [
 { #category : 'as yet unclassified' }
 BenchAnalysisResult >> codeCoverageCorrelation: strategy mutant: mutant [
 
-	| composite plot tests x y |
+	| composite plot tests x y regression |
 	composite := RSCompositeChart new.
 	plot := RSScatterPlot new.
-	composite title: mutant.
-	
+
 	tests := (benchmarkConfigs at:
 		          (benchmarkConfigs findFirst: [ :config |
 			           config title = strategy ])) tests.
 
-	x := ((comparisons at: strategy at: mutant) keys collect: [ :test |
-		((comparisons at: strategy at: mutant) at: test) size * 100 / (mutants at: mutant)
-	]).
+	x := (comparisons at: strategy at: mutant) keys collect: [ :test |
+		     ((comparisons at: strategy at: mutant) at: test) size * 100
+		     / (mutants at: mutant) ].
 
-	y := (tests collect: [ :test |
-		test result coverageResult ifNil: [ 0 ] ifNotNil: [ test result coverageResult percentage ]
-	]).
+	y := tests collect: [ :test |
+		     test result coverageResult
+			     ifNil: [ 0 ]
+			     ifNotNil: [ test result coverageResult percentage ] ].
 
 	plot x: x y: y.
-	composite xlabel: 'Mutation score'; ylabel: 'Code coverage'.
-	composite add: (self linealRegressionLineFrom: x andY: y).
-	
+	composite
+		xlabel: 'Mutation score';
+		ylabel: 'Code coverage'.
+	regression := self linealRegressionLineFrom: x andY: y.
+	composite add: (RSLinePlot new y: ((1 to: x max) collect: [ :_x |
+				  regression slope * _x + regression intercept ])).
 
 	composite add: plot.
+	composite title: mutant, ' ( correlationCoefficient: ', regression correlationCoefficient asString, ' )'.
+	
 	^ composite inspect
 ]
 
@@ -126,8 +131,9 @@ BenchAnalysisResult >> linealRegressionLineFrom: xs andY: ys [
 	
 	linReg := PMLinearRegression new.
 	(1 to: n) do: [:i | linReg add: (xs at: i) @ (ys at: i) ].
+	
+	^ linReg
 
-	^ RSLinePlot new y: ((1 to: xs max) collect: [ :x | linReg slope * x + linReg intercept ])
 ]
 
 { #category : 'adding' }

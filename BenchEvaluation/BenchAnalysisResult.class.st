@@ -10,9 +10,9 @@ Class {
 		'benchmarkConfigs',
 		'experiment'
 	],
-	#category : 'BenchEvaluation-Analysis',
+	#category : 'BenchEvaluation-Result',
 	#package : 'BenchEvaluation',
-	#tag : 'Analysis'
+	#tag : 'Result'
 }
 
 { #category : 'accessing' }
@@ -59,7 +59,7 @@ BenchAnalysisResult >> codeCoverageCorrelation: strategy mutant: mutant [
 	y := tests collect: [ :test |
 		     test result coverageResult
 			     ifNil: [ 0 ]
-			     ifNotNil: [ test result coverageResult percentage ] ].
+			     ifNotNil: [ test result coverageResult fixedPercentage ] ].
 
 	plot x: x y: y.
 	composite

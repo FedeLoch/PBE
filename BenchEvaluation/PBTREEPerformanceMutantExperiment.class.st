@@ -56,6 +56,8 @@ PBTREEPerformanceMutantExperiment >> analyzeWithTunnedMutants [
 				]
 			]
 	].
+	
+	self computeTestsPercentages: result.
 
 	^ result end.
 ]
@@ -67,6 +69,13 @@ PBTREEPerformanceMutantExperiment >> baseLinePbtConfiguration [
 		  executionConfig:
 		  (self schemaWith: self simpleRegexConfig)
 		  called: 'Baseline'
+]
+
+{ #category : 'as yet unclassified' }
+PBTREEPerformanceMutantExperiment >> computeTestsPercentages: result [
+
+	result benchmarkConfigs do: [ :config |
+		config tests do: [ :t | t result coverageResult fixedPercentage ] ]
 ]
 
 { #category : 'as yet unclassified' }

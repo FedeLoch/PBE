@@ -44,7 +44,7 @@ BenchAnalysisResult >> codeCoverageCorrelation: strategy [
 { #category : 'as yet unclassified' }
 BenchAnalysisResult >> codeCoverageCorrelation: strategy mutant: mutant [
 
-	| composite plot tests x y regression correlationCoef |
+	| composite plot tests x y regression correlationCoef legend |
 	composite := RSCompositeChart new.
 	plot := RSScatterPlot new.
 
@@ -71,9 +71,16 @@ BenchAnalysisResult >> codeCoverageCorrelation: strategy mutant: mutant [
 
 	composite add: plot.
 	correlationCoef := (regression correlationCoefficient  * 100) round: 2.
-	composite title: mutant, ' ( correlationCoefficient: ', correlationCoef asString, '% )'.
+	composite title: mutant.
+	legend := RSLegend new.
+"	legend text: 'Mutation Operator: ', mutant."
+	legend text: 'Correlation coefficient: ', correlationCoef asString, '%'.
+	legend legendDo: [ :shape | shape withBorder; padding: 10; scaleBy: 0.5 ].
+	legend location top; center; offset: 50.
+	legend container: composite canvas.
+	legend build.
 	
-	^ composite inspect
+	^ composite build inspect
 ]
 
 { #category : 'adding' }

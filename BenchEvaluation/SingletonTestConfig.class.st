@@ -5,9 +5,9 @@ Class {
 		'test',
 		'countOfTimesPerTest'
 	],
-	#category : 'BenchEvaluation-Analysis',
+	#category : 'BenchEvaluation-BenchmarkConfig',
 	#package : 'BenchEvaluation',
-	#tag : 'Analysis'
+	#tag : 'BenchmarkConfig'
 }
 
 { #category : 'instance creation' }

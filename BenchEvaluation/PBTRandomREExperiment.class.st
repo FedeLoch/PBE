@@ -21,7 +21,7 @@ PBTRandomREExperiment >> benchmarkConfigs [
 { #category : 'as yet unclassified' }
 PBTRandomREExperiment >> classesToMutate [
 
-	^ { RxMatcher ". RxParser" }
+	^  RxMatcher package classes "{ RxMatcher "". RxParser"" }"
 ]
 
 { #category : 'as yet unclassified' }

@@ -5,9 +5,9 @@ Class {
 		'title',
 		'baseline'
 	],
-	#category : 'BenchEvaluation-Analysis',
+	#category : 'BenchEvaluation-BenchmarkConfig',
 	#package : 'BenchEvaluation',
-	#tag : 'Analysis'
+	#tag : 'BenchmarkConfig'
 }
 
 { #category : 'accessing' }

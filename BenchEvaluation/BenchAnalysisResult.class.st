@@ -44,7 +44,7 @@ BenchAnalysisResult >> codeCoverageCorrelation: strategy [
 { #category : 'as yet unclassified' }
 BenchAnalysisResult >> codeCoverageCorrelation: strategy mutant: mutant [
 
-	| composite plot tests x y regression |
+	| composite plot tests x y regression correlationCoef |
 	composite := RSCompositeChart new.
 	plot := RSScatterPlot new.
 
@@ -70,7 +70,8 @@ BenchAnalysisResult >> codeCoverageCorrelation: strategy mutant: mutant [
 				  regression slope * _x + regression intercept ])).
 
 	composite add: plot.
-	composite title: mutant, ' ( correlationCoefficient: ', regression correlationCoefficient asString, ' )'.
+	correlationCoef := (regression correlationCoefficient  * 100) round: 2.
+	composite title: mutant, ' ( correlationCoefficient: ', correlationCoef asString, '% )'.
 	
 	^ composite inspect
 ]

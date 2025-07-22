@@ -30,6 +30,12 @@ PBTREEPerformanceMutantExperiment class >> performExperimentAndSave [
 ]
 
 { #category : 'as yet unclassified' }
+PBTREEPerformanceMutantExperiment class >> performExperimentAndSaveFromTests: tests [
+
+	^ self new analyzeWithTunnedMutants: tests
+]
+
+{ #category : 'as yet unclassified' }
 PBTREEPerformanceMutantExperiment class >> performExperimentsByCounOfCases: countOfCases [
 
 	"N, count of tests per config to eval"
@@ -39,6 +45,7 @@ PBTREEPerformanceMutantExperiment class >> performExperimentsByCounOfCases: coun
 { #category : 'as yet unclassified' }
 PBTREEPerformanceMutantExperiment >> analyzeWithTunnedMutants [
 
+	" TODO: DELETE ME "
 	| result |
 	self setUpBenchmarks.
 	
@@ -63,6 +70,28 @@ PBTREEPerformanceMutantExperiment >> analyzeWithTunnedMutants [
 ]
 
 { #category : 'as yet unclassified' }
+PBTREEPerformanceMutantExperiment >> analyzeWithTunnedMutants: tests [
+
+	| result config |
+	config := TestsConfig new tests: tests.
+
+	result := TestsAnalysisResult new experiment: self; benchmarkConfig: config; start.
+
+	result mutants: mutants.
+	config tests do: [ :test |
+		(self mutantsFor: test) do: [ :mutant |
+			mutant install.
+			result detect: test from: config forMutant: mutant.
+			mutant uninstall
+		]
+	].
+
+	self computeTestsPercentages: result.
+
+	^ result end
+]
+
+{ #category : 'as yet unclassified' }
 PBTREEPerformanceMutantExperiment >> baseLinePbtConfiguration [
 
 	^ self
@@ -74,8 +103,7 @@ PBTREEPerformanceMutantExperiment >> baseLinePbtConfiguration [
 { #category : 'as yet unclassified' }
 PBTREEPerformanceMutantExperiment >> computeTestsPercentages: result [
 
-	result benchmarkConfigs do: [ :config |
-		config tests do: [ :t | t result coverageResult fixedPercentage ] ]
+	result computeTestsPercentages
 ]
 
 { #category : 'as yet unclassified' }

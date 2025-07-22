@@ -44,13 +44,22 @@ BenchAnalysisResult >> codeCoverageCorrelation: strategy [
 { #category : 'as yet unclassified' }
 BenchAnalysisResult >> codeCoverageCorrelation: strategy mutant: mutant [
 
-	| composite plot tests x y regression correlationCoef legend |
-	composite := RSCompositeChart new.
-	plot := RSScatterPlot new.
+	| tests |
 
 	tests := (benchmarkConfigs at:
 		          (benchmarkConfigs findFirst: [ :config |
 			           config title = strategy ])) tests.
+		
+	^ self codeCoverageCorrelationFromTests: tests strategy: strategy mutant: mutant
+
+]
+
+{ #category : 'as yet unclassified' }
+BenchAnalysisResult >> codeCoverageCorrelationFromTests: tests strategy: strategy mutant: mutant [ 
+
+	| composite plot x y regression correlationCoef legend |
+	composite := RSCompositeChart new.
+	plot := RSScatterPlot new.
 
 	x := (comparisons at: strategy at: mutant) keys collect: [ :test |
 		     ((comparisons at: strategy at: mutant) at: test) size * 100
@@ -62,7 +71,7 @@ BenchAnalysisResult >> codeCoverageCorrelation: strategy mutant: mutant [
 			     ifNotNil: [ test result coverageResult fixedPercentage ] ].
 
 	plot x: x y: y.
-	composite
+	composite 
 		xlabel: 'Mutation score';
 		ylabel: 'Code coverage'.
 	regression := self linealRegressionLineFrom: x andY: y.
@@ -70,17 +79,23 @@ BenchAnalysisResult >> codeCoverageCorrelation: strategy mutant: mutant [
 				  regression slope * _x + regression intercept ])).
 
 	composite add: plot.
-	correlationCoef := (regression correlationCoefficient  * 100) round: 2.
+	correlationCoef := (regression correlationCoefficient  * 100) round: 3.
 	composite title: mutant.
 	legend := RSLegend new.
-"	legend text: 'Mutation Operator: ', mutant."
 	legend text: 'Correlation coefficient: ', correlationCoef asString, '%'.
-	legend legendDo: [ :shape | shape withBorder; padding: 10; scaleBy: 0.5 ].
-	legend location top; center; offset: 50.
+	legend legendDo: [ :shape | shape withBorder; padding: 10; scaleBy: 1 ].
+	legend location top; center; offset: 100.
 	legend container: composite canvas.
 	legend build.
 	
 	^ composite build inspect
+]
+
+{ #category : 'as yet unclassified' }
+BenchAnalysisResult >> computeTestsPercentages [
+
+	self benchmarkConfigs do: [ :config |
+		config tests do: [ :t | t result coverageResult fixedPercentage ] ]
 ]
 
 { #category : 'adding' }

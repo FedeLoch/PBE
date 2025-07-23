@@ -247,7 +247,7 @@ BenchAnalysisResult >> testSatisfy: test with: threshold [
 BenchAnalysisResult >> thresholdOf: config for: test [
 
 	| stdevs |
-	stdevs := 1.
+	stdevs := 2.
 
 	^ (config averageFor: test) + (stdevs * (config stdevFor: test))
 ]

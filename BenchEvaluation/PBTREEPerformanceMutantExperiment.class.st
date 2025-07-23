@@ -20,7 +20,7 @@ PBTREEPerformanceMutantExperiment class >> analyze [
 PBTREEPerformanceMutantExperiment class >> performExperimentAndSave [
 
 	| file result |
-	result := self performExperimentsByCounOfCases: 5.
+	result := self performExperimentsByCounOfCases: 100.
 
 	file := 'benchmarkExperimentResult' asFileReference, 'ston'.
 	

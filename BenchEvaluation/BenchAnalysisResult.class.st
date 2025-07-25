@@ -103,12 +103,16 @@ BenchAnalysisResult >> detect: test from: config forMutant: mutant [
 
 	comparisons at: config title ifAbsentPut: OrderedDictionary new.
 
-	(comparisons at: config title) at: mutant operator title ifAbsentPut: OrderedDictionary new.
-	
-	((comparisons at: config title)
-		at: mutant operator title)
+	(comparisons at: config title)
+		at: mutant operator title
+		ifAbsentPut: OrderedDictionary new.
+
+	((comparisons at: config title) at: mutant operator title)
 		at: test name
-		update: [ :set | ((self detected: test from: config) ifTrue: [ set copyWith: mutant ] ifFalse: [ set ]) ]
+		update: [ :set |
+			(self detected: test from: config)
+				ifTrue: [ set copyWith: mutant ]
+				ifFalse: [ set ] ]
 		initial: Set new
 ]
 
@@ -247,7 +251,7 @@ BenchAnalysisResult >> testSatisfy: test with: threshold [
 BenchAnalysisResult >> thresholdOf: config for: test [
 
 	| stdevs |
-	stdevs := 10.
+	stdevs := 2.
 
 	^ (config averageFor: test) + (stdevs * (config stdevFor: test))
 ]

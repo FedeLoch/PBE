@@ -45,28 +45,8 @@ PBTREEPerformanceMutantExperiment class >> performExperimentsByCounOfCases: coun
 { #category : 'as yet unclassified' }
 PBTREEPerformanceMutantExperiment >> analyzeWithTunnedMutants [
 
-	" TODO: DELETE ME "
-	| result |
 	self setUpBenchmarks.
-	
-	result := (BenchAnalysisResult new title: 'Result running ', self criteriaLabel, ' each configuration ')
-		experiment: self;
-		benchmarkConfigs: benchmarkConfigs; start.
-
-	result mutants: mutants.
-	benchmarkConfigs do: [ :config |
-			config tests do: [ :test |
-				(self mutantsFor: test) do: [ :mutant |
-					mutant install.
-					result detect: test from: config forMutant: mutant.
-					mutant uninstall.
-				]
-			]
-	].
-	
-	self computeTestsPercentages: result.
-
-	^ result end.
+	^ self analyzeWithTunnedMutants: benchmarkConfigs first tests
 ]
 
 { #category : 'as yet unclassified' }

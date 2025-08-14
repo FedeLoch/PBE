@@ -29,7 +29,7 @@ Metacello new
 
 Metacello new
 		baseline: 'BenchEvaluation';
-		repository: 'github://FedeLoch/BenchEvaluation:main';
+		repository: 'github://FedeLoch/PBE:main';
 		onConflictUseIncoming;
 		load.
 
